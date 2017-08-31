@@ -2,6 +2,7 @@
 
 from item import Item
 
+
 class GildedRose(object):
     def __init__(self):
         self.inventory = Inventory()
