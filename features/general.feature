@@ -15,3 +15,8 @@ Feature: General business rules
     Given an item with quality 0 and sell by date yesterday
     When 1 day passed
     Then the item has quality 0
+
+  Scenario: Item can never have a quality higher than 50
+    Given an item with quality 51 and sell by date tomorrow
+    When 1 day passed
+    Then the item has quality 50
