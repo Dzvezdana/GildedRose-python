@@ -5,3 +5,13 @@ Feature: General business rules
     When 1 day passed
     Then the item has quality 9
     And the item has sell by date today
+
+  Scenario: Item where sell by date has passed
+    Given an item with quality 10 and sell by date yesterday
+    When 1 day passed
+    Then the item has quality 8
+
+  Scenario: Item quality is never negative
+    Given an item with quality 0 and sell by date yesterday
+    When 1 day passed
+    Then the item has quality 0
