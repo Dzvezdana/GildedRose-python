@@ -39,6 +39,18 @@ def step_impl(context, type_name, quality):
     pass
 
 
+@given("a backstage pass and quality (?P<quality>.+) and sell by date in (?P<days>.+) days")
+def step_impl(context, quality, days):
+    """
+    :type context: behave.runner.Context
+    :type quality: str
+    :type days: str
+    """
+    context.item = Item("Backstage passes to a TAFKAL80ETC concert", int(days), int(quality))
+    context.gildedRose.inventory.items.append(context.item)
+    pass
+
+
 @when("1 day passed")
 def step_impl(context):
     """
