@@ -1,28 +1,40 @@
 from behave import *
 
-from gilded_rose import GildedRose
 from item import Item
 
 use_step_matcher("re")
 
 
-def get_sell_in_relative_day(relativeDay):
-    if relativeDay == "yesterday":
+def get_sell_in_relative_day(relative_day):
+    if relative_day == "yesterday":
         return -1
-    if relativeDay == "today":
+    if relative_day == "today":
         return 0
-    if relativeDay == "tomorrow":
+    if relative_day == "tomorrow":
         return 1
 
 
-@given("an item with quality (?P<quality>.+) and sell by date (?P<relativeDay>.+)")
-def step_impl(context, quality, relativeDay):
+@given("an item with quality (?P<quality>.+) and sell by date (?P<relative_day>.+)")
+def step_impl(context, quality, relative_day):
     """
     :type context: behave.runner.Context
+    :type quality: str
+    :type relative_day: str
     """
-    sell_in = get_sell_in_relative_day(relativeDay)
+    sell_in = get_sell_in_relative_day(relative_day)
     context.item = Item("some name", sell_in, int(quality))
-    context.gildedRose = GildedRose()
+    context.gildedRose.inventory.items.append(context.item)
+    pass
+
+
+@given('an item of type "(?P<type_name>.+)" with quality (?P<quality>.+) and sell by date in the future')
+def step_impl(context, type_name, quality):
+    """
+    :type context: behave.runner.Context
+    :type type_name: str
+    :type quality: str
+    """
+    context.item = Item(type_name, 15, int(quality))
     context.gildedRose.inventory.items.append(context.item)
     pass
 
@@ -36,13 +48,14 @@ def step_impl(context):
     pass
 
 
-@then("the item has quality (?P<quality>.+)")
+@then("the item has quality (?P<quality>\d*)")
 def step_impl(context, quality):
     """
     :type context: behave.runner.Context
     :type quality: str
     """
-    assert_equals(context.item.quality, int(quality))
+    expected = int(quality)
+    assert_equals(context.item.quality, expected)
 
 
 @step("the item has sell by date today")
@@ -54,5 +67,5 @@ def step_impl(context):
 
 
 def assert_equals(actual, expected):
-    assert actual == expected, "Expected {} {}, was: {} {}"\
+    assert actual == expected, "Expected {} {}, was: {} {}" \
         .format(expected, type(expected), actual, type(actual))
